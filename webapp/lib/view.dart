@@ -215,6 +215,11 @@ enum FormGroupTypes {
   DATE
 }
 
+enum ProjectConfigurationSections {
+  PROJECT_LANGUAGES,
+  USER_CONFIGURATION
+}
+
 class ProjectConfigurationView {
   DivElement configurationViewElement;
   FormElement _projectConfigurationForm;
@@ -231,7 +236,7 @@ class ProjectConfigurationView {
   void _buildForm() {
     _projectConfigurationForm
       ..append(
-        _multipleFormGroup('Project Languages:',
+        _multipleFormGroup('Project Languages:', ProjectConfigurationSections.PROJECT_LANGUAGES.toString(),
           {'English': {'send': FormGroupTypes.CHECKBOX, 'receive': FormGroupTypes.CHECKBOX },
             'Somali': {'send': FormGroupTypes.CHECKBOX, 'receive': FormGroupTypes.CHECKBOX }})
       )
@@ -248,7 +253,7 @@ class ProjectConfigurationView {
         _singleFormGroup('Project start date', FormGroupTypes.DATE)
       )
       ..append(
-        _multipleFormGroup('User Configuration:',
+        _multipleFormGroup('User Configuration:', ProjectConfigurationSections.USER_CONFIGURATION.toString(),
           {'person1@africasvoices.org:':
             {'can see messages': FormGroupTypes.CHECKBOX,
               'can perform translations': FormGroupTypes.CHECKBOX,
@@ -294,7 +299,6 @@ class ProjectConfigurationView {
     var formElement = new InputElement()
       ..classes.add('single-form-group__input')
       ..type = formGroupType.toString().split('.').last;
-    print('$label: ${formGroupType.toString()}');
     if (formGroupType == FormGroupTypes.CHECKBOX) {
       formGroup
       ..append(formElement)
@@ -308,9 +312,10 @@ class ProjectConfigurationView {
     return formGroup;
   }
 
-  DivElement _multipleFormGroup(String groupLabel, Map<String, Map<String, FormGroupTypes>> groupElements) {
+  DivElement _multipleFormGroup(String groupLabel, String section, Map<String, Map<String, FormGroupTypes>> groupElements) {
     var formGroup = new DivElement()
-      ..classes.add('multi-form-group');
+      ..classes.add('multi-form-group')
+      ..setAttribute('section', section);
     var formGroupLabel = new LabelElement()
       ..classes.add('multi-form-group__label')
       ..text = groupLabel;
@@ -331,6 +336,19 @@ class ProjectConfigurationView {
         new ButtonElement()
         ..classes.addAll(['close-button', 'multi-form-group__button-remove'])
         ..text = 'x'
+        ..onClick.listen((event) {
+          event.preventDefault();
+          var formGroup = (event.target as Element).parent;
+          var section = formGroup.parent.attributes['section'];
+          if (section == ProjectConfigurationSections.PROJECT_LANGUAGES.toString()) {
+            controller.command(controller.UIAction.removeProjectConfigurationLanguage,
+              new controller.ProjectConfigurationLanguage(language: formGroup.firstChild.text.trim()));
+          } else if (section == ProjectConfigurationSections.USER_CONFIGURATION.toString()) {
+            controller.command(controller.UIAction.removeProjectConfigurationUser,
+              new controller.ProjectConfigurationUser(user: formGroup.firstChild.text.trim()));
+          }
+          formGroup.remove();
+        })
       );
       formGroup.append(formElementGroups);
     });

@@ -17,6 +17,8 @@ enum UIAction {
   signInButtonClicked,
   signOutButtonClicked,
   loadProjectConfiguration,
+  removeProjectConfigurationLanguage,
+  removeProjectConfigurationUser,
   loadBatchRepliesPackageConfiguration,
   loadEscalatesPackageConfiguration,
   configurationTagSelected,
@@ -51,6 +53,19 @@ class ConfigurationResponseData extends Data {
   String text;
   int index;
   ConfigurationResponseData({this.parentTag, this.index, this.language, this.text});
+}
+
+class ProjectConfigurationLanguage extends Data {
+  String language;
+  bool send;
+  bool receive;
+  ProjectConfigurationLanguage({this.language, this.send, this.receive});
+}
+
+class ProjectConfigurationUser extends Data {
+  String user;
+  Map<String, bool> options;
+  ProjectConfigurationUser({this.user, this.options});
 }
 
 Map<String, List<List<String>>> configurationTagData;
@@ -108,6 +123,14 @@ void command(UIAction action, Data actionData) {
       fetchConfigurationData();
       var selectedTag = configurationTagData.keys.toList().first;
       populateConfigurationView(selectedTag, getTagList(selectedTag, configurationTagData), configurationResponseLanguages, configurationTagData[selectedTag]);
+      break;
+    case UIAction.removeProjectConfigurationLanguage:
+      ProjectConfigurationLanguage data = actionData;
+      print(data.language);
+      break;
+    case UIAction.removeProjectConfigurationUser:
+      ProjectConfigurationUser data = actionData;
+      print(data.user);
       break;
     case UIAction.loadBatchRepliesPackageConfiguration:
       fetchConfigurationData();
