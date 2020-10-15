@@ -141,19 +141,3 @@
     bottom: 52px;
     right: -4px;
 }
-
-.add-button {
-    margin: 5px;
-    background-color: #a7a4a4;
-    border: none;
-    border-radius: 100%;
-    outline: none;
-    height: 30px;
-    width: 30px;
-    font-size: 1.1rem;
-    font-weight: bold;
-}
-
-.add-button:hover {
-    cursor: pointer;
-}
