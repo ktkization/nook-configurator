@@ -327,6 +327,11 @@ class ProjectConfigurationView {
           ..classes.add('single-form-group--in-multi');
         formElementGroups.append(formElementGroup);
       });
+      formElementGroups.append(
+        new ButtonElement()
+        ..classes.addAll(['close-button', 'multi-form-group__button-remove'])
+        ..text = 'x'
+      );
       formGroup.append(formElementGroups);
     });
     return formGroup;
@@ -508,7 +513,7 @@ class ConfigurationViewTagListPartial {
         ..text = 'Select new tag to add');
     addTagModal.append(
       new ButtonElement()
-        ..classes.add('add-tag-modal__close-button')
+        ..classes.addAll(['close-button', 'add-tag-modal__close-button'])
         ..text = 'x'
         ..onClick.listen((_) => addTagModal.remove()));
     var tagOptions = new SelectElement()

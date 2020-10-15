@@ -138,17 +138,8 @@
 }
 
 .add-tag-modal__close-button {
-    position: absolute;
-    border: none;
-    outline: none;
     bottom: 52px;
     right: -4px;
-    background: none;
-    font-size: .8rem;
-}
-
-.add-tag-modal__close-button:hover {
-    cursor: pointer;
 }
 
 .add-button {
@@ -165,8 +156,4 @@
 
 .add-button:hover {
     cursor: pointer;
-}
-
-.project-configuration {
-    width: 80%;
 }

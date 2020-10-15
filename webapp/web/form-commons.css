@@ -1,0 +1,11 @@
+.close-button {
+  position: absolute;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: .8rem;
+}
+
+.close-button:hover {
+  cursor: pointer;
+}
