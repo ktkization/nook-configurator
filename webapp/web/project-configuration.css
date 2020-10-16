@@ -48,6 +48,7 @@
     display: grid;
     grid-template-rows: auto;
     grid-gap: 10px;
+    position: relative;
 }
 
 .multi-form-group__label {
@@ -72,4 +73,15 @@
 .multi-form-group__button-remove {
   top: -2px;
   right: -4px;
+}
+
+.add-project-configuration-modal {
+  left: 55px;
+  bottom: -4px;
+  width: 200px;
+  height: 15px;
+}
+
+.add-project-configuration-modal__dropdown {
+  width: inherit;
 }

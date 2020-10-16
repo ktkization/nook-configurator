@@ -120,12 +120,7 @@
 
 .add-tag-modal {
     width: 275px;
-    position: absolute;
     margin: -35px 0px 0px 45px;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: .5rem;
-    background-color: #efefef;
 }
 
 .add-tag-modal__heading {
@@ -133,7 +128,6 @@
 }
 
 .add-tag-modal__dropdown {
-    border-radius: .5rem;
     width: 100%;
 }
 

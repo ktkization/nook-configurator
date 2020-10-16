@@ -25,3 +25,16 @@
 .add-button:hover {
   cursor: pointer;
 }
+
+
+.modal {
+  position: absolute;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: .5rem;
+  background-color: #efefef;
+}
+
+.dropdown {
+  border-radius: .5rem;
+}

@@ -236,7 +236,7 @@ class ProjectConfigurationView {
   void _buildForm() {
     _projectConfigurationForm
       ..append(
-        _multipleFormGroup('Project Languages:', ProjectConfigurationSections.PROJECT_LANGUAGES.toString(),
+        _multipleFormGroup('Project Languages:', ProjectConfigurationSections.PROJECT_LANGUAGES,
           {'English': {'send': FormGroupTypes.CHECKBOX, 'receive': FormGroupTypes.CHECKBOX },
             'Somali': {'send': FormGroupTypes.CHECKBOX, 'receive': FormGroupTypes.CHECKBOX }})
       )
@@ -253,7 +253,7 @@ class ProjectConfigurationView {
         _singleFormGroup('Project start date', FormGroupTypes.DATE)
       )
       ..append(
-        _multipleFormGroup('User Configuration:', ProjectConfigurationSections.USER_CONFIGURATION.toString(),
+        _multipleFormGroup('User Configuration:', ProjectConfigurationSections.USER_CONFIGURATION,
           {'person1@africasvoices.org:':
             {'can see messages': FormGroupTypes.CHECKBOX,
               'can perform translations': FormGroupTypes.CHECKBOX,
@@ -312,10 +312,10 @@ class ProjectConfigurationView {
     return formGroup;
   }
 
-  DivElement _multipleFormGroup(String groupLabel, String section, Map<String, Map<String, FormGroupTypes>> groupElements) {
+  DivElement _multipleFormGroup(String groupLabel, ProjectConfigurationSections configurationSection, Map<String, Map<String, FormGroupTypes>> groupElements) {
     var formGroup = new DivElement()
       ..classes.add('multi-form-group')
-      ..setAttribute('section', section);
+      ..setAttribute('section', configurationSection.toString());
     var formGroupLabel = new LabelElement()
       ..classes.add('multi-form-group__label')
       ..text = groupLabel;
@@ -339,20 +339,70 @@ class ProjectConfigurationView {
         ..onClick.listen((event) {
           event.preventDefault();
           var formGroup = (event.target as Element).parent;
-          var section = formGroup.parent.attributes['section'];
-          if (section == ProjectConfigurationSections.PROJECT_LANGUAGES.toString()) {
-            controller.command(controller.UIAction.removeProjectConfigurationLanguage,
+          switch (configurationSection) {
+            case ProjectConfigurationSections.PROJECT_LANGUAGES:
+              controller.command(controller.UIAction.removeProjectConfigurationLanguage,
               new controller.ProjectConfigurationLanguage(language: formGroup.firstChild.text.trim()));
-          } else if (section == ProjectConfigurationSections.USER_CONFIGURATION.toString()) {
-            controller.command(controller.UIAction.removeProjectConfigurationUser,
+              break;
+            case ProjectConfigurationSections.USER_CONFIGURATION:
+              controller.command(controller.UIAction.removeProjectConfigurationUser,
               new controller.ProjectConfigurationUser(user: formGroup.firstChild.text.trim()));
+              break;
           }
           formGroup.remove();
         })
       );
       formGroup.append(formElementGroups);
     });
+    formGroup.append(
+        new ButtonElement()
+        ..classes.add('add-button')
+        ..text = '+'
+        ..onClick.listen((event) {
+          event.preventDefault();
+          formGroup.append(_addProjectConfigutationModal(configurationSection));
+        })
+      );
     return formGroup;
+  }
+
+  SelectElement _projectConfigutationDropdown(List<String> options) {
+    var selector = new SelectElement()
+      ..classes.addAll(['dropdown', 'add-project-configuration-modal__dropdown']);
+    selector.add(new OptionElement()..text = 'Select language to add', false);
+    options.forEach((option) {
+      var optionElement = new OptionElement()
+        ..text = option
+        ..value = option;
+      selector.add(optionElement, false);
+    });
+    return selector;
+  }
+
+  DivElement _addProjectConfigutationModal(ProjectConfigurationSections configurationSection) {
+    var modal = DivElement()
+      ..classes.addAll(['modal', 'add-project-configuration-modal']);
+    switch (configurationSection) {
+            case ProjectConfigurationSections.PROJECT_LANGUAGES:
+              modal.append(
+                _projectConfigutationDropdown(controller.additionalConfigurationResponseLanguages)
+                  ..onChange.listen((event) {
+                    controller.command(controller.UIAction.addProjectConfigurationLanguage,
+                      new controller.ProjectConfigurationLanguage(language: (event.currentTarget as SelectElement).value));
+                })
+              );
+              break;
+            case ProjectConfigurationSections.USER_CONFIGURATION:
+              modal.append(
+                _projectConfigutationDropdown(controller.configurationResponseUsers)
+                  ..onChange.listen((event) {
+                    controller.command(controller.UIAction.addProjectConfigurationUser,
+                      new controller.ProjectConfigurationUser(user: (event.currentTarget as SelectElement).value));
+                  })
+              );
+              break;
+          }
+    return modal;
   }
 }
 
@@ -524,7 +574,7 @@ class ConfigurationViewTagListPartial {
 
   DivElement addTagDropDown(List<String> tags) {
     var addTagModal = new DivElement()
-      ..classes.add('add-tag-modal');
+      ..classes.addAll(['modal', 'add-tag-modal']);
     addTagModal.append(
       HeadingElement.h6()
         ..classes.add('add-tag-modal__heading')
@@ -535,7 +585,7 @@ class ConfigurationViewTagListPartial {
         ..text = 'x'
         ..onClick.listen((_) => addTagModal.remove()));
     var tagOptions = new SelectElement()
-      ..classes.add('add-tag-modal__dropdown')
+      ..classes.addAll(['dropdown', 'add-tag-modal__dropdown'])
       ..onChange.listen((event) {
         var selectedOption = (event.currentTarget as SelectElement).value;
         controller.command(controller.UIAction.addConfigurationTag, new controller.ConfigurationTagData(tagToAdd: selectedOption));
