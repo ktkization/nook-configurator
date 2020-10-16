@@ -1,6 +1,10 @@
 // TODO To be replaced with real models. Just dumping dummy data here to keep controller.dart clean
 
+List<String> get configurationResponseUserData => ['person5@africasvoices.org', 'person6@africasvoices.org', 'person7@africasvoices.org'];
+
 List<String> get configurationReponseLanguageData => ['English', 'Somali'];
+
+List<String> get additionalConfigurationResponseLanguagData => ['Kiswahili', 'Buganda', 'Kinyarwanda'];
 
 Set<String> get configurationTags => {'addtional Tag 1', 'addtional Tag 2', 'addtional Tag 3', 'addtional Tag 4', 'addtional Tag 5'};
 

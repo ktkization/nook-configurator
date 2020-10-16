@@ -233,6 +233,12 @@ class ProjectConfigurationView {
     configurationViewElement.append(_projectConfigurationForm);
   }
 
+  void renderProjectConfiguration(List<String> projectCongigurationData, ) {
+    for (var data in projectCongigurationData) {
+
+    }
+  }
+
   void _buildForm() {
     _projectConfigurationForm
       ..append(

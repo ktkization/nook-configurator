@@ -17,7 +17,9 @@ enum UIAction {
   signInButtonClicked,
   signOutButtonClicked,
   loadProjectConfiguration,
+  addProjectConfigurationLanguage,
   removeProjectConfigurationLanguage,
+  addProjectConfigurationUser,
   removeProjectConfigurationUser,
   loadBatchRepliesPackageConfiguration,
   loadEscalatesPackageConfiguration,
@@ -55,6 +57,11 @@ class ConfigurationResponseData extends Data {
   ConfigurationResponseData({this.parentTag, this.index, this.language, this.text});
 }
 
+class ProjectConfigurationFormData extends Data {
+  List<ProjectConfigurationLanguage> languageFormSection;
+  List<Map<String, Map<view.FormGroupTypes, dynamic>>> mainFormSection;
+}
+
 class ProjectConfigurationLanguage extends Data {
   String language;
   bool send;
@@ -70,7 +77,9 @@ class ProjectConfigurationUser extends Data {
 
 Map<String, List<List<String>>> configurationTagData;
 Set<String> additionalConfigurationTags;
+List<String> additionalConfigurationResponseLanguages;
 List<String> configurationResponseLanguages;
+List<String> configurationResponseUsers;
 
 model.User signedInUser;
 
@@ -84,6 +93,7 @@ void initUI() {
   window.location.hash = '#/dashboard'; //TODO This is just temporary initialization becuase we don't have a complete app
   router.routeTo(window.location.hash);
   view.navView.projectTitle = 'COVID IMAQAL'; //TODO To be replaced by data from model
+  fetchConfigurationData();
 }
 
 void setupRoutes() {
@@ -120,25 +130,30 @@ void command(UIAction action, Data actionData) {
       platform.signOut();
       break;
     case UIAction.loadProjectConfiguration:
-      fetchConfigurationData();
       var selectedTag = configurationTagData.keys.toList().first;
       populateConfigurationView(selectedTag, getTagList(selectedTag, configurationTagData), configurationResponseLanguages, configurationTagData[selectedTag]);
       break;
+    case UIAction.addProjectConfigurationLanguage:
+      ProjectConfigurationLanguage data = actionData;
+      addProjectConfigurationLanguage();
+      break;
     case UIAction.removeProjectConfigurationLanguage:
       ProjectConfigurationLanguage data = actionData;
-      print(data.language);
+      removeProjectConfigurationLanguage();
+      break;
+    case UIAction.addProjectConfigurationUser:
+      ProjectConfigurationUser data = actionData;
+      addProjectConfigurationUser();
       break;
     case UIAction.removeProjectConfigurationUser:
       ProjectConfigurationUser data = actionData;
-      print(data.user);
+      removeProjectConfigurationUser();
       break;
     case UIAction.loadBatchRepliesPackageConfiguration:
-      fetchConfigurationData();
       var selectedTag = configurationTagData.keys.toList().first;
       populateConfigurationView(selectedTag, getTagList(selectedTag, configurationTagData), configurationResponseLanguages, configurationTagData[selectedTag]);
       break;
     case UIAction.loadEscalatesPackageConfiguration:
-      fetchConfigurationData(); //TODO For now fetch from the same tag data. Escalates to use a new set of tags
       var selectedTag = configurationTagData.keys.toList().first;
       populateConfigurationView(selectedTag, getTagList(selectedTag, configurationTagData), configurationResponseLanguages, configurationTagData[selectedTag]);
       break;
@@ -207,6 +222,8 @@ void fetchConfigurationData() {
   configurationTagData = model.configurationData;
   additionalConfigurationTags = model.configurationTags;
   configurationResponseLanguages = model.configurationReponseLanguageData;
+  additionalConfigurationResponseLanguages = model.additionalConfigurationResponseLanguagData;
+  configurationResponseUsers = model.configurationResponseUserData;
 }
 
 Map<String, bool> getTagList(String selectedTag, Map<String, List<List<String>>> tagData) {
@@ -246,4 +263,20 @@ void addConfigurationResponseEntries(String parentTag, int languageIndex, String
     tagData[parentTag].add(['', '']);
   }
   populateConfigurationView(parentTag, getTagList(parentTag, tagData), responseLanguages,  tagData[parentTag]);
+}
+
+void addProjectConfigurationLanguage() {
+
+}
+
+void removeProjectConfigurationLanguage() {
+
+}
+
+void addProjectConfigurationUser() {
+
+}
+
+void removeProjectConfigurationUser() {
+
 }
